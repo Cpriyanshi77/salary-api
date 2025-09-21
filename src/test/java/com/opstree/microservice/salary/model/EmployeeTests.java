@@ -3,6 +3,9 @@ package com.opstree.microservice.salary.model;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 class EmployeeTest {
 
     @Test
@@ -11,8 +14,8 @@ class EmployeeTest {
         Employee employee = new Employee();
         String id = "123";
         String name = "John Doe";
-        Float salary = 5000.0f;
-        String processDate = "2023-07-17";
+        BigDecimal salary = new BigDecimal("5000.00");
+        LocalDate processDate = LocalDate.parse("2023-07-17");
         String status = "Active";
 
         // Set values using setters
@@ -30,3 +33,4 @@ class EmployeeTest {
         assertEquals(status, employee.getStatus());
     }
 }
+

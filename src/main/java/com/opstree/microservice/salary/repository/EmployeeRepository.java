@@ -1,14 +1,19 @@
 package com.opstree.microservice.salary.repository;
 
+import java.util.List;
+
+import org.springframework.data.cassandra.repository.CassandraRepository;
+import org.springframework.stereotype.Repository;
+
 import com.opstree.microservice.salary.model.Employee;
 
-import java.util.List;
-import java.util.UUID;
-import org.springframework.data.cassandra.repository.CassandraRepository;
-import org.springframework.data.cassandra.repository.Query;
+@Repository
+public interface EmployeeRepository extends CassandraRepository<Employee, String> {
 
-public interface EmployeeRepository extends CassandraRepository<Employee, UUID> {
-
-    @Query("SELECT * FROM employee_salary WHERE id = ?0")
-    Employee findByIdAsString(String id);
+    /**
+     * Return all rows for the given partition key (id).
+     * Method name intentionally does NOT clash with CrudRepository.findById(ID).
+     */
+    List<Employee> findByIdIs(String id);
 }
+

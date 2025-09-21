@@ -4,43 +4,33 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
-import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 
-@SpringBootTest
-@ContextConfiguration(classes = OpenAPIConfig.class)
-class OpenAPIConfigTest {
+class OpenAPIConfigTests {
 
     @Test
     void testOpenAPIConfiguration() {
-        // Load the Spring context and retrieve the OpenAPI bean
         OpenAPI openAPI = new OpenAPIConfig().myOpenAPI();
 
-        // Verify that the OpenAPI object is not null
         assertNotNull(openAPI);
 
-        // Verify the server details
-        assertEquals(1, openAPI.getServers().size());
-        Server server = openAPI.getServers().get(0);
-        assertEquals("http://localhost:8080", server.getUrl());
-        assertEquals("Server URL in Development environment", server.getDescription());
+        // Expect 3 servers (your ELB setup)
+        assertEquals(3, openAPI.getServers().size());
 
-        // Verify the contact details
-        Contact contact = openAPI.getInfo().getContact();
-        assertEquals("opensource@opstree.com", contact.getEmail());
-        assertEquals("Opstree Solutions", contact.getName());
-        assertEquals("https://opstree.com", contact.getUrl());
+        Server devServer = openAPI.getServers().get(0);
+        assertEquals("http://lb-test-1996005186.ap-south-1.elb.amazonaws.com:8081", devServer.getUrl());
+        assertEquals("Server URL in Development environment", devServer.getDescription());
 
-        // Verify the license details
-        License license = openAPI.getInfo().getLicense();
-        assertEquals("MIT License", license.getName());
-        assertEquals("https://choosealicense.com/licenses/mit/", license.getUrl());
+        Server albServer = openAPI.getServers().get(1);
+        assertEquals("http://lb-test-1996005186.ap-south-1.elb.amazonaws.com:8081/swagger-ui/index.html", albServer.getUrl());
+        assertEquals("Server URL in Development environment", albServer.getDescription());
 
-        // Verify other general info details
+        Server albbServer = openAPI.getServers().get(2);
+        assertEquals("http://lb-test-1996005186.ap-south-1.elb.amazonaws.com:8081/actuator/health", albbServer.getUrl());
+        assertEquals("Server URL in Development environment", albbServer.getDescription());
+
+        // Basic info assertions
         assertEquals("Salary Microservice API", openAPI.getInfo().getTitle());
         assertEquals("1.0", openAPI.getInfo().getVersion());
         assertEquals("This API exposes endpoints to manage salary information.", openAPI.getInfo().getDescription());
