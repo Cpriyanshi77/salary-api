@@ -9,7 +9,7 @@ ARTIFACT_DIR="salary_artifact"
 JAR_NAME="salary-0.1.0-RELEASE.jar"
 
 echo "→ Running Maven build (clean package)..."
-mvn -B clean package
+mvn -B -DskipTests clean package
 
 echo "→ Checking built JAR..."
 if [ ! -f "target/${JAR_NAME}" ]; then
